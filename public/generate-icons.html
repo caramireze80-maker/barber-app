@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generar íconos PWA</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f9f9f9; }
+    canvas { display: none; }
+    button { padding: 0.75rem 1.5rem; font-size: 1rem; cursor: pointer; background: #000; color: #fff; border: none; border-radius: 8px; margin: 0.5rem; }
+    .info { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1.5rem; max-width: 500px; }
+    code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <div class="info">
+    <h2>Generar íconos PWA - BarberApp</h2>
+    <p>Haz clic en cada botón para descargar el ícono correspondiente.<br>
+    Mueve los archivos descargados a la carpeta <code>public/</code> del proyecto.</p>
+    <button onclick="generateIcon(192)">Descargar icon-192.png</button>
+    <button onclick="generateIcon(512)">Descargar icon-512.png</button>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    function generateIcon(size) {
+      const canvas = document.getElementById("canvas")
+      canvas.width = size
+      canvas.height = size
+      const ctx = canvas.getContext("2d")
+
+      // Fondo negro
+      ctx.fillStyle = "#000000"
+      ctx.beginPath()
+      ctx.roundRect(0, 0, size, size, size * 0.18)
+      ctx.fill()
+
+      // Tijera (símbolo ✂ simplificado)
+      const cx = size / 2
+      const cy = size / 2
+      const scale = size / 192
+
+      ctx.strokeStyle = "#ffffff"
+      ctx.lineWidth = 8 * scale
+      ctx.lineCap = "round"
+
+      // Mango 1
+      ctx.beginPath()
+      ctx.arc(cx - 24 * scale, cy + 20 * scale, 16 * scale, 0, Math.PI * 2)
+      ctx.stroke()
+
+      // Mango 2
+      ctx.beginPath()
+      ctx.arc(cx + 24 * scale, cy + 20 * scale, 16 * scale, 0, Math.PI * 2)
+      ctx.stroke()
+
+      // Hoja 1
+      ctx.beginPath()
+      ctx.moveTo(cx - 24 * scale, cy + 4 * scale)
+      ctx.lineTo(cx - 4 * scale, cy - 30 * scale)
+      ctx.stroke()
+
+      // Hoja 2
+      ctx.beginPath()
+      ctx.moveTo(cx + 24 * scale, cy + 4 * scale)
+      ctx.lineTo(cx + 4 * scale, cy - 30 * scale)
+      ctx.stroke()
+
+      // Pivote
+      ctx.beginPath()
+      ctx.arc(cx, cy - 14 * scale, 5 * scale, 0, Math.PI * 2)
+      ctx.fillStyle = "#ffffff"
+      ctx.fill()
+
+      // Descargar
+      const link = document.createElement("a")
+      link.download = `icon-${size}.png`
+      link.href = canvas.toDataURL("image/png")
+      link.click()
+    }
+  </script>
+</body>
+</html>
